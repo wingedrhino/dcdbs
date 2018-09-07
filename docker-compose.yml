@@ -12,13 +12,11 @@ services:
   httpbin: # SUPER USEFUL for testing APIs
     image: kennethreitz/httpbin:latest
     mem_limit: 500m
-    restart: always
     ports:
       - 2080:8080
   minio:
     image: minio/minio:latest
     mem_limit: 500m
-    restart: always
     environment:
       MINIO_ACCESS_KEY: "access_key"
       MINIO_SECRET_KEY: "secret_key"
@@ -30,7 +28,6 @@ services:
   redis:
     image: redis:4.0
     mem_limit: 64m
-    restart: always
     volumes:
       - redisdata:/data
     command: redis-server --appendonly yes # ["redis-server", "--appendonly", "yes"]
@@ -39,7 +36,6 @@ services:
   rediscommander:
     image: rediscommander/redis-commander:latest
     mem_limit: 500m
-    restart: always
     environment:
       - "REDIS_HOSTS=local:redis:6379"
     ports:
@@ -47,7 +43,6 @@ services:
   postgres:
     image: postgres:10
     mem_limit: 1000m
-    restart: always
     environment:
       POSTGRES_PASSWORD: "postgres"
       POSTGRES_USER: "postgres" # default value retained
@@ -61,7 +56,6 @@ services:
   pgadmin4:
     image: dpage/pgadmin4:3
     mem_limit: 800m
-    restart: always
     environment:
       PGADMIN_DEFAULT_EMAIL: "dev@example.com"
       PGADMIN_DEFAULT_PASSWORD: "postgres"
@@ -75,7 +69,6 @@ services:
   elasticsearch:
     image: docker.elastic.co/elasticsearch/elasticsearch:6.4.0
     mem_limit: 2000m
-    restart: always
     ports:
       - 9200:9200
     environment:
@@ -92,7 +85,6 @@ services:
   kibana:
     image: docker.elastic.co/kibana/kibana-oss:6.4.0
     mem_limit: 1000m
-    restart: always
     ports:
       - 5601:5601
     environment:
@@ -105,7 +97,6 @@ services:
   mongo:
     image: mongo:4.0
     mem_limit: 2000m
-    restart: always
     ports:
       - 27017:27017
     environment:
@@ -116,7 +107,6 @@ services:
   mongo-express:
     image: mongo-express:latest
     mem_limit: 500m
-    restart: always
     ports:
       - 7017:8081
     environment:
@@ -127,6 +117,25 @@ services:
       ME_CONFIG_MONGODB_SERVER: "mongo"
     depends_on:
       - mongo
+  keycloak:
+    image: jboss/keycloak:latest
+    environment:
+      # We configure initial admin user and password here via envars
+      # Another way to do is run this command on a running container:
+      # docker-compose exec keycloak keycloak/bin/add-user-keycloak.sh -u <USERNAME> -p <PASSWORD>
+      # Then restarting the container:
+      # docker-compose restart keycloak
+      KEYCLOAK_USER: "user"
+      KEYCLOAK_PASSWORD: "password"
+      # Set the database to connect to
+      DB_VENDOR: "postgres"
+      DB_ADDR: "postgres"
+      DB_PORT: "5432"
+      ## make sure you create this db in postgres container
+      ## the first time keycloak would just crash.
+      DB_DATABASE: "keycloak"
+      DB_USER: "postgres"
+      DB_PASSWORD: "postgres"
 
 volumes:
   portainerdata:
