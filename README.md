@@ -60,3 +60,21 @@ If you changed username/password for default admin on PGAdmin4, you need to
 stop all containers and then run `docker volume rm dcdbs_pgadmindata` to remove
 the PGAdmin4 volume. Otherwise the updated user/pass from the environment
 variables passed through docker-compose.yml doesn't seem to be picked up.
+
+## MongoDB Connection Setup
+
+You should first login to [127.0.0.1:7017](127.0.0.1:7017) to open mongo-express
+and create a new database for a project you are starting.
+
+The URI for MongoDB under this docker-compose.yml should look something like
+this:
+
+```
+mongodb://mongo:mongo@127.0.0.1:27017/projectname?connectTimeoutMS=3000&authSource=admin"
+
+```
+
+Note the additional `authSource=admin` most docs seem to leave out. This tells
+MongoDB that you want the user `mongo` to be authenticated against the `admin`
+database (that is created by default and has declared users inside).
+
