@@ -78,3 +78,46 @@ Note the additional `authSource=admin` most docs seem to leave out. This tells
 MongoDB that you want the user `mongo` to be authenticated against the `admin`
 database (that is created by default and has declared users inside).
 
+## Desktop Admin Interfaces
+
+Usually you'd want to run without admin GUIs within the Docker image, so that
+you can use ONE desktop admin GUI per database but use this to manage multiple
+instances of one database. I'm listing names of admin GUIs I've found to be
+nice. Except for RedisInsight, all others are auto-installed if you use
+[Rhino flavoured Ubuntu](https://github.com/wingedrhino/DistroSetup/tree/trunk/setup-helpers/Ubuntu).
+
+### PostgreSQL - PgAdmin 4
+
+The desktop app is just a system tray icon that launches the server on localhost
+and lets you open it on a browser. But it works!
+
+### Redis - RedisInsight
+
+This isn't opensource but it's free use, by RedisLabs. Get it
+[here](https://redislabs.com/redisinsight/). You need to jump through a few
+hoops to get it though. So if Commander works just fine, don't bother!
+
+### General Purpose SQL - DBeaver
+
+I usually keep this around *just* to help me visualize someone else's database
+schema quickly. It creates a useful ER diagram of all tables and works with
+PostgreSQL, MySQL, MariaDB and SQLite3.
+
+### MongoDB - Compass
+
+It's the official GUI by MongoDB, Inc. Released under SSPL, it's free to use as
+a standalone management tool. I recommend the Compass Isolated edition, since it
+has all the features of Compass but doesn't dial back home.
+
+Check out the versions [here](https://docs.mongodb.com/compass/master/), the
+source code [here](https://github.com/mongodb-js/compass/) and finally, the
+download page is [here](https://www.mongodb.com/download-center/compass).
+
+### MySQL - MySQL Workbench
+
+Probably the ONE reason (alongside sharding & clustering support from way back)
+MySQL has way more users than PostgreSQL. I never used MySQL personally, but
+this is the app I've seen open on every MySQL user's desktop since forever!
+
+Download it [here](https://dev.mysql.com/downloads/workbench/).
+
