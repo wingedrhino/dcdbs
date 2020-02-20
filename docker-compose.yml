@@ -4,7 +4,7 @@ services:
   portainer: # Manage Docker containers; on startup set 'password' as password
     image: portainer/portainer:latest
     ports:
-      - 9080:9000
+      - 3080:9000
     command: -H unix:///var/run/docker.sock
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
@@ -24,25 +24,46 @@ services:
       - miniodata:/data
     command: server /data
     ports:
-      - 9000:9000
+      - 19000:9000
   redis:
-    image: redis:4.0
-    mem_limit: 64m
+    image: redis:5.0
+    mem_limit: 600m
     volumes:
       - redisdata:/data
     command: redis-server --appendonly yes # ["redis-server", "--appendonly", "yes"]
     ports:
-      - 6379:6379
+      - 16379:6379
   rediscommander:
     image: rediscommander/redis-commander:latest
     mem_limit: 500m
     environment:
       - "REDIS_HOSTS=local:redis:6379"
     ports:
-    - 6378:8081
+     - 16378:8081
+  mariadb:
+    image: mariadb:10.4
+    mem_limit: 600m
+    environment:
+      MYSQL_DATABASE: maria
+      MYSQL_USER: maria
+      MYSQL_PASSWORD: password
+      MYSQL_ROOT_PASSWORD: password
+    ports:
+      - 13306:3306
+    volumes:
+      - mariadata:/var/lib/mysql
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin:latest
+    environment:
+      - PMA_ARBITRARY=1
+      - PMA_HOST=mariadb
+    ports:
+      - 13305:80
+    depends_on:
+      - mariadb
   postgres:
-    image: postgres:10
-    mem_limit: 1000m
+    image: postgres:12
+    mem_limit: 600m
     environment:
       POSTGRES_PASSWORD: "postgres"
       POSTGRES_USER: "postgres" # default value retained
@@ -50,27 +71,27 @@ services:
       PGDATA: "/var/lib/postgresql/data/pgdata" # subdir within volume
       POSTGRES_INITDB_WALDIR: "/var/lib/postgresql/data/waldata" # subdir within volume
     ports:
-      - 5432:5432
+      - 15432:5432
     volumes:
       - pgdata:/var/lib/postgresql/data
   pgadmin4:
-    image: dpage/pgadmin4:3
-    mem_limit: 800m
+    image: dpage/pgadmin4:latest
+    mem_limit: 600m
     environment:
       PGADMIN_DEFAULT_EMAIL: "dev@example.com"
       PGADMIN_DEFAULT_PASSWORD: "postgres"
       PGADMIN_SERVER_NAME: "pgadmin4"
     ports:
-      - 5431:80
+      - 15431:80
     volumes:
       - pgadmindata:/var/lib/pgadmin
     depends_on:
       - postgres
   elasticsearch:
-    image: docker.elastic.co/elasticsearch/elasticsearch:6.4.0
+    image: docker.elastic.co/elasticsearch/elasticsearch:7.6.0
     mem_limit: 2000m
     ports:
-      - 9200:9200
+      - 19200:9200
     environment:
       cluster.name: "dcdbs"
       bootstrap.memory_lock: "true"
@@ -83,10 +104,10 @@ services:
     volumes:
       - esdata:/usr/share/elasticsearch/data
   kibana:
-    image: docker.elastic.co/kibana/kibana-oss:6.4.0
+    image: docker.elastic.co/kibana/kibana-oss:7.6.0
     mem_limit: 1000m
     ports:
-      - 5601:5601
+      - 15601:5601
     environment:
       SERVER_NAME: "kibana"
       ELASTICSEARCH_URL: "http://elasticsearch:9200"
@@ -95,10 +116,10 @@ services:
     depends_on:
       - elasticsearch
   mongo:
-    image: mongo:4.0
-    mem_limit: 2000m
+    image: mongo:4.2
+    mem_limit: 1000m
     ports:
-      - 27017:27017
+      - 37017:27017
     environment:
       MONGO_INITDB_ROOT_USERNAME: "mongo"
       MONGO_INITDB_ROOT_PASSWORD: "mongo"
@@ -108,7 +129,7 @@ services:
     image: mongo-express:latest
     mem_limit: 500m
     ports:
-      - 7017:8081
+      - 37016:8081
     environment:
       ME_CONFIG_MONGODB_ADMINUSERNAME: "mongo"
       ME_CONFIG_MONGODB_ADMINPASSWORD: "mongo"
@@ -119,9 +140,9 @@ services:
       - mongo
   keycloak:
     image: jboss/keycloak:latest
-    mem_limit: 2000m
+    mem_limit: 1000m
     ports:
-      - 7080:8080
+      - 18080:8080
     environment:
       # We configure initial admin user and password here via envars
       # Another way to do is run this command on a running container:
@@ -139,6 +160,8 @@ services:
       DB_DATABASE: "keycloak"
       DB_USER: "postgres"
       DB_PASSWORD: "postgres"
+    depends_on:
+      - postgres
 
 volumes:
   portainerdata:
@@ -149,3 +172,4 @@ volumes:
   esdata:
   kibanadata:
   mongodata:
+  mariadata:

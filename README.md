@@ -17,31 +17,21 @@ docker-compose commands!
 
 ## Services and Ports
 
-* portainer - 9080
-* httpbin - 2080
-* minio - 9000
-* redis-commander - 6378
-* redis - 6379
-* postgres - 5432
-* pgadmin4 - 5431
-* elasticsearch - 9200
-* kibana - 5601
-* mongodb - 27017
-* mongo-express - 7017
+Please refer to the `docker-compose.yml` file directly! It's human readable.
 
 ## Initial Setup
 
 * Run `sudo ./host-setup.sh` to ensure that the swap is turned off (for stable
   performance) and addressable virtual memory is set to 262144 (to stop
   ElasticSearch from crashing).
-* Run `docker-compose pull` to pull in the latest versions of all images defined
-  in this docker-compose.yml file.
+* Run `docker-compose pull` or `make pull` to pull in the latest versions of all
+  images defined in this `docker-compose.yml` file. 
 
-## Start and Stop Containers
+## Manage Containers
 
-Start containers via `docker-compose up -d`
+Start containers via `docker-compose up -d` or via `make` or via `make up`.
 
-Check what containers are running via `docker-compose ps`
+Check what containers are running via `docker-compose ps` or via `make ps`.
 
 Check logs of a single container via `docker-compose logs mongo -f`. The `-f`
 flag follows new logs as they come. Skip it to not follow and just print the
@@ -56,6 +46,9 @@ your data is exactly as you left it earlier.
 
 Run `docker volume prune` to get rid of all volumes created by docker to give
 yourself a fresh start if you screwed up somewhere in the configuration.
+
+You could run `docker-compose down -v` or `make clean ` to only remove volumes
+from THIS repository.
 
 ### PGAdmin4 Credentials Change
 
