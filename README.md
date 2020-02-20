@@ -12,6 +12,9 @@ just running shared databases here. Luckily data is namespaced so collections,
 databases, indexes, prefixes or whatever a DB chooses to call them don't tend to
 conflict.
 
+There's Makefile included that you can refer to if you can't remember
+docker-compose commands!
+
 ## Services and Ports
 
 * portainer - 9080
@@ -61,7 +64,7 @@ stop all containers and then run `docker volume rm dcdbs_pgadmindata` to remove
 the PGAdmin4 volume. Otherwise the updated user/pass from the environment
 variables passed through docker-compose.yml doesn't seem to be picked up.
 
-## MongoDB Connection Setup
+### MongoDB Connection Setup
 
 You should first login to [127.0.0.1:7017](127.0.0.1:7017) to open mongo-express
 and create a new database for a project you are starting.
