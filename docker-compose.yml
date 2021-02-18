@@ -26,7 +26,7 @@ services:
     ports:
       - 19000:9000
   redis:
-    image: redis:5.0
+    image: redis:6.0
     mem_limit: 600m
     volumes:
       - redisdata:/data
@@ -41,7 +41,7 @@ services:
     ports:
      - 16378:8081
   mariadb:
-    image: mariadb:10.4
+    image: mariadb:10.5
     mem_limit: 600m
     environment:
       MYSQL_DATABASE: maria
@@ -62,7 +62,7 @@ services:
     depends_on:
       - mariadb
   postgres:
-    image: postgres:12
+    image: postgres:13
     mem_limit: 600m
     environment:
       POSTGRES_PASSWORD: "postgres"
@@ -88,7 +88,7 @@ services:
     depends_on:
       - postgres
   elasticsearch:
-    image: docker.elastic.co/elasticsearch/elasticsearch:7.6.0
+    image: docker.elastic.co/elasticsearch/elasticsearch:7.11.1
     mem_limit: 2000m
     ports:
       - 19200:9200
@@ -104,7 +104,7 @@ services:
     volumes:
       - esdata:/usr/share/elasticsearch/data
   kibana:
-    image: docker.elastic.co/kibana/kibana-oss:7.6.0
+    image: docker.elastic.co/kibana/kibana:7.11.1
     mem_limit: 1000m
     ports:
       - 15601:5601
