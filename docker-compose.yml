@@ -33,13 +33,16 @@ services:
       timeout: 20s
       retries: 3
   redis:
-    image: redis:6.2
-    mem_limit: 600m
+    image: redis:latest
     volumes:
       - redisdata:/data
-    command: redis-server --appendonly yes # ["redis-server", "--appendonly", "yes"]
     ports:
       - 16379:6379
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
   rediscommander:
     image: rediscommander/redis-commander:latest
     mem_limit: 500m
